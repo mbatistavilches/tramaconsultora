@@ -19,9 +19,8 @@ const links = [
 </head>
 <body>
     <main>
-        <img src={logoUrl} alt="Trama Logo" class="logo" />
-        <p class="tagline">Paisajes Productivos y Regeneración</p> // [cite: 87, 101]
-        
+        <img src={logoUrl} alt="Trama" class="logo" />
+        <p class="tagline">Paisajes Productivos y Regeneración</p> 
         <div class="container">
             {links.map(link => (
                 <a href={link.url} class="button" target="_blank">{link.name}</a>
@@ -49,22 +48,25 @@ const links = [
             max-width: 400px; 
             width: 100%; 
             text-align: center; 
-            z-index: 10; /* Asegura que los botones estén sobre el fondo */
+            z-index: 10;
+        }
+
+        .logo-container {
+            margin-bottom: 0.5rem;
         }
 
         .logo {
-            max-width: 180px;
+            max-width: 220px;
             height: auto;
-            margin-bottom: 1rem;
         }
 
         .tagline {
-            font-size: 0.9rem;
-            color: #2d3e24;
-            letter-spacing: 1px;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-        }
+            font-size: 0.8rem;
+            color: #97b968; /* El verde claro de tus botones */
+            letter-spacing: 2px;
+            margin-bottom: 2.5rem;
+            font-weight: bold;
+        }        }
 
         .container { 
             display: flex; 
