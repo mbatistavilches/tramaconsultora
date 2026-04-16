@@ -1,36 +1,112 @@
 ---
-// Aquí puedes definir variables si quieres, por ahora lo dejamos simple.
+// Configuración de Trama
+const logoUrl = "https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/logo.png"; // Asegurate de subir tu logo a la carpeta public
+const imagenFondoUrl = "https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/trama-topo.png"; // El PNG para la esquina
+const bgColor = "#48542B"; // Cambiá este HEX para el color de fondo general
+
 const links = [
 	{ name: "Nuestros Servicios", url: "https://docs.google.com/document/d/1_1wKV6pmLkv4CJ1xTB_bTv8qE9O_tsSRd9nQMRtEvWY" },
 	{ name: "Instagram", url: "https://instagram.com/trama.paisajes" },
-	{ name: "WhatsApp", url: "https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" },
+	{ name: "Contacto", url: "https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" },
 ];
 ---
 
 <html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>TRAMA - Consultora Ambiental</title>
-	</head>
-	<body>
-		<main>
-			<h1>TRAMA</h1>
-			<p>Paisajes Productivos y Resilientes</p>
-			
-			<div class="container">
-				{links.map(link => (
-					<a href={link.url} class="button">{link.name}</a>
-				))}
-			</div>
-		</main>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TRAMA - Paisajes Agroecológicos</title>
+</head>
+<body>
+    <main>
+        <img src={logoUrl} alt="Trama Logo" class="logo" />
+        <p class="tagline">Paisajes Productivos y Resilientes</p> // [cite: 87, 101]
+        
+        <div class="container">
+            {links.map(link => (
+                <a href={link.url} class="button" target="_blank">{link.name}</a>
+            ))}
+        </div>
+    </main>
 
-		<style>
-			body { background: #f4f1ea; font-family: system-ui; display: flex; justify-content: center; padding: 2rem; color: #2d3e24; }
-			main { max-width: 400px; width: 100%; text-align: center; }
-			.container { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
-			.button { background: #97b968; color: white; padding: 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.2s; }
-			.button:hover { background: #7a9a52; transform: translateY(-2px); }
-		</style>
-	</body>
+    <img src={imagenFondoUrl} alt="" class="bg-element" />
+
+    <style define:vars={{ bgColor }}>
+        body { 
+            background-color: var(--bgColor); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        main { 
+            max-width: 400px; 
+            width: 100%; 
+            text-align: center; 
+            z-index: 10; /* Asegura que los botones estén sobre el fondo */
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: #2d3e24;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 1rem; 
+        }
+
+        .button { 
+            background: #97b968; 
+            color: white; 
+            padding: 1.1rem; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .button:hover { 
+            background: #7a9a52; 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Imagen en esquina inferior derecha responsive */
+        .bg-element {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            max-width: 250px; /* Tamaño para desktop */
+            width: 40%;      /* Tamaño para móviles */
+            height: auto;
+            pointer-events: none; /* No interfiere con los clicks */
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .bg-element {
+                max-width: 150px;
+            }
+        }
+    </style>
+</body>
 </html>
