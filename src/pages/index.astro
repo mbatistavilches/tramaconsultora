@@ -1,125 +1,187 @@
----
-// Configuración de Trama
-const logoUrl = "https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/logo.png"; // Asegurate de subir tu logo a la carpeta public
-const imagenFondoUrl = "https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/trama-topo.png"; // El PNG para la esquina
-const bgColor = "#48542B"; // Cambiá este HEX para el color de fondo general
-
-const links = [
-	{ name: "Nuestros Servicios", url: "https://docs.google.com/document/d/1_1wKV6pmLkv4CJ1xTB_bTv8qE9O_tsSRd9nQMRtEvWY" },
-	{ name: "Instagram", url: "https://instagram.com/trama.paisajes" },
-	{ name: "Contacto", url: "https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" },
-];
----
+// Configuración de Trama const logoUrl = "/logo.png"; const imagenFondoUrl = "/trama-topo.png"; const bgColor = "#48542B"; // Fondo Verde Trama const accentColor = "#97b968"; // Verde Claro Trama
 
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://tramaconsultora.com.ar/" />
-	<meta property="og:title" content="TRAMA - Paisajes Productivos y Regeneración" />
-	<meta property="og:description" content="Diseño y planificación de paisajes productivos aplicando principios ecológicos en la Patagonia." />
-	<meta property="og:image" content="https://tramaconsultora.com.ar/og-image.png" />
-	
-	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="https://tramaconsultora.com.ar/" />
-	<meta property="twitter:title" content="TRAMA - Paisajes Productivos y Regeneración" />
-	<meta property="twitter:description" content="Especialistas en diseño hidrológico, ganadería regenerativa y mapas de riesgo." />
-	<meta property="twitter:image" content="https://tramaconsultora.com.ar/og-image.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TRAMA - Paisajes Agroecológicos</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRAMA - Paisajes Agroecológicos</title>
+<link rel="preconnect" href="https://www.google.com/search?q=https://fonts.googleapis.com">
+<link rel="preconnect" href="https://www.google.com/search?q=https://fonts.gstatic.com" crossorigin>
+<link href="https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DInter:wght%40400%3B600%3B700%3B800%26family%3DOpen%2BSans:wght%40700%3B800%26display%3Dswap" rel="stylesheet">
 </head>
 <body>
-    <main>
-        <img src={logoUrl} alt="Trama" class="logo" />
-        <p class="tagline">Paisajes Productivos y Regeneración</p> 
-        <div class="container">
-            {links.map(link => (
-                <a href={link.url} class="button" target="_blank">{link.name}</a>
-            ))}
-        </div>
-    </main>
+<main>
+<header>
+<img src={logoUrl} alt="Trama" class="logo" />
+<p class="tagline">Paisajes Productivos y Regeneración</p>
+</header>
 
-    <img src={imagenFondoUrl} alt="" class="bg-element" />
+    <section class="hero-card">
+        <h2>Planificación Predial</h2>
+        <p>Combinamos tecnología de precisión con principios regenerativos para transformar tu territorio.</p>
+    </section>
 
-    <style define:vars={{ bgColor }}>
-        body { 
-            background-color: var(--bgColor); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh;
-            margin: 0;
-            padding: 2rem;
-            box-sizing: border-box;
-            position: relative;
-            overflow-x: hidden;
-        }
+    <div class="services-container">
+        <h3 class="section-title">NUESTROS SERVICIOS</h3>
+        
+        <!-- ACORDEÓN 1 -->
+        <details class="service-item">
+            <summary>
+                <span class="icon">📍</span>
+                <span class="title">Relevamiento y Mapeo</span>
+                <span class="chevron">▼</span>
+            </summary>
+            <div class="content">
+                <p>Conocé tu terreno en detalle con cartografía de alta precisión y tecnología dron RTK.</p>
+                <ul>
+                    <li>Cartografía base alta resolución</li>
+                    <li>Monitoreo satelital periódico</li>
+                    <li>Topografía digital</li>
+                </ul>
+                <img src="/data/servicio_1.jpg" alt="Mapeo" class="service-img" onerror="this.style.display='none'"/>
+            </div>
+        </details>
 
-        main { 
-            max-width: 400px; 
-            width: 100%; 
-            text-align: center; 
-            z-index: 10;
-        }
+        <!-- ACORDEÓN 2 -->
+        <details class="service-item">
+            <summary>
+                <span class="icon">🛣️</span>
+                <span class="title">Caminería Rural</span>
+                <span class="chevron">▼</span>
+            </summary>
+            <div class="content">
+                <p>Accesos eficientes que respetan la topografía y el paisaje.</p>
+                <ul>
+                    <li>Trazado óptimo de caminos</li>
+                    <li>Drenajes naturales</li>
+                    <li>Planos de detalle</li>
+                </ul>
+                <img src="/data/servicio_2.jpg" alt="Caminos" class="service-img" onerror="this.style.display='none'"/>
+            </div>
+        </details>
 
-        .logo-container {
-            margin-bottom: 0.5rem;
-        }
+        <!-- ACORDEÓN 3 -->
+        <details class="service-item">
+            <summary>
+                <span class="icon">💧</span>
+                <span class="title">Gestión del Agua</span>
+                <span class="chevron">▼</span>
+            </summary>
+            <div class="content">
+                <p>Diseño de sistemas de captación y distribución para producción y vivienda.</p>
+                <ul>
+                    <li>Identificación de cuencas</li>
+                    <li>Cosecha de agua y embalses</li>
+                    <li>Sistemas de riego</li>
+                </ul>
+                <img src="/data/servicio_3.jpg" alt="Agua" class="service-img" onerror="this.style.display='none'"/>
+            </div>
+        </details>
 
-        .logo {
-            max-width: 220px;
-            height: auto;
-        }
-        .tagline {
-            font-size: 0.9rem;
-            color: #97b968;
-            letter-spacing: 2px;
-            margin-bottom: 2.5rem;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
+        <!-- Puedes seguir agregando el resto de los servicios siguiendo la misma estructura -->
 
-        .container { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 1rem; 
-        }
+    </div>
 
-        .button { 
-            background: #97b968; 
-            color: white; 
-            padding: 1.1rem; 
-            border-radius: 12px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
+    <footer>
+        <a href="https://wa.me/5491155119496" class="btn-whatsapp" target="_blank">WhatsApp</a>
+        <a href="https://instagram.com/trama.paisajes" class="btn-instagram" target="_blank">Instagram</a>
+        <p class="copyright">Trama · Paisajes Agroecológicos</p>
+    </footer>
+</main>
 
-        .button:hover { 
-            background: #7a9a52; 
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
+<img src={imagenFondoUrl} alt="" class="bg-element" />
 
-        /* Imagen en esquina inferior derecha responsive */
-        .bg-element {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            max-width: 250px; /* Tamaño para desktop */
-            width: 40%;      /* Tamaño para móviles */
-            height: auto;
-            pointer-events: none; /* No interfiere con los clicks */
-            z-index: 1;
-            opacity: 0.8;
-        }
+<style define:vars={{ bgColor, accentColor }}>
+    body { 
+        background-color: var(--bgColor); 
+        font-family: 'Inter', sans-serif; 
+        margin: 0;
+        padding: 1.5rem;
+        color: white;
+        display: flex;
+        justify-content: center;
+    }
 
-        @media (max-width: 600px) {
-            .bg-element {
-                max-width: 150px;
-            }
-        }
-    </style>
+    main { width: 100%; max-width: 450px; z-index: 10; }
+
+    header { text-align: center; margin-bottom: 2rem; }
+    .logo { max-width: 180px; height: auto; }
+    .tagline { 
+        font-size: 0.75rem; 
+        color: var(--accentColor); 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+        font-weight: 800;
+        margin-top: 0.5rem;
+    }
+
+    .hero-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 1.5rem;
+        border-radius: 24px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .hero-card h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; }
+    .hero-card p { margin: 0; font-size: 0.85rem; opacity: 0.8; line-height: 1.4; }
+
+    .section-title { font-size: 0.65rem; letter-spacing: 2px; opacity: 0.5; margin-bottom: 1rem; }
+
+    .services-container { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .service-item {
+        background: white;
+        color: #3a4a2c;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    summary {
+        padding: 1.2rem;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    summary::-webkit-details-marker { display: none; }
+
+    .chevron { margin-left: auto; font-size: 0.6rem; opacity: 0.3; transition: transform 0.3s; }
+    details[open] .chevron { transform: rotate(180deg); }
+
+    .content { padding: 0 1.2rem 1.2rem 1.2rem; font-size: 0.85rem; border-top: 1px solid #f0f0f0; padding-top: 1rem; }
+    .content p { margin: 0 0 1rem 0; line-height: 1.5; color: #666; }
+    .content ul { padding-left: 1.2rem; margin-bottom: 1rem; color: #444; }
+    .content li { margin-bottom: 0.4rem; }
+
+    .service-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 12px;
+        background: #eee;
+    }
+
+    footer { margin-top: 3rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    footer a { 
+        text-align: center; 
+        padding: 1.1rem; 
+        border-radius: 16px; 
+        text-decoration: none; 
+        color: white; 
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    .btn-whatsapp { background: #25D366; }
+    .btn-instagram { background: #E4405F; }
+    .copyright { font-size: 0.6rem; opacity: 0.4; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+
+    .bg-element { position: fixed; bottom: -20px; right: -20px; width: 180px; opacity: 0.3; pointer-events: none; z-index: 1; }
+</style>
+
+
 </body>
 </html>
