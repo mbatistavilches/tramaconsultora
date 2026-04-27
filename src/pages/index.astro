@@ -1,108 +1,114 @@
 ---
-// TRAMA - Web Unificada (Linktree + Servicios Interactivos)
+// TRAMA - Web Unificada Robusta
+const bgColor = "#FDFCF8";
+const darkGreen = "#3a4a2c";
+const accentGreen = "#acc670";
+
+const services = [
+    { id: 1, title: "Relevamiento y Mapeo", details: ["Cartografía base de alta resolución", "Monitoreo satelital (Sentinel-2)", "Topografía digital", "Índices NDVI"] },
+    { id: 2, title: "Caminería Rural", details: ["Trazado óptimo según relieve", "Integración con drenajes", "Planos de detalle"] },
+    { id: 3, title: "Gestión del Agua", details: ["Identificación de microcuencas", "Cosecha de agua", "Sistemas de riego"] },
+    { id: 4, title: "Prevención de Incendios", details: ["Mapas de riesgo", "Cortafuegos productivos", "Planes de restauración"] },
+    { id: 5, title: "Planificación Agroecológica", details: ["Diseño integral de campos", "Diagnóstico de fertilidad", "Sistemas silvopastoriles"] },
+    { id: 6, title: "Análisis Territorial", details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"] }
+];
 ---
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRAMA - Paisajes Agroecológicos</title>
-    <meta property="og:title" content="TRAMA - Paisajes Agroecológicos" />
-    <meta property="og:description" content="Diseño y planificación de paisajes productivos y resilientes en la Patagonia." />
-    <meta property="og:image" content="https://tramaconsultora.com.ar/og-image.png" />
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <style>
+    <style define:vars={{ bgColor, darkGreen, accentGreen }}>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #FDFCF8; color: #3a4a2c; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bgColor); 
+            color: var(--darkGreen); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        header { width: 100%; max-width: 500px; text-align: center; padding: 40px 20px; box-sizing: border-box; }
+        .logo { max-width: 250px; height: auto; margin-bottom: 15px; }
+        .tagline { font-style: italic; color: #78716c; font-size: 0.9rem; margin: 0; }
+
+        .hero { 
+            width: 90%; max-width: 450px; 
+            background-color: var(--darkGreen); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 24px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 10px 15px -3px rgba(58, 74, 44, 0.2);
+            box-sizing: border-box;
+        }
+
+        .services-section { width: 90%; max-width: 450px; margin-bottom: 40px; }
+        .section-title { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #a8a29e; margin-bottom: 15px; }
+
+        details { background: white; border: 1px solid #e7e5e4; border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
+        summary { padding: 20px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; font-size: 1.2rem; color: var(--accentGreen); }
+        details[open] summary::after { content: '−'; }
+        
+        .details-content { padding: 0 20px 20px 20px; font-size: 0.9rem; color: #57534e; }
+        .details-content ul { padding-left: 20px; margin: 0; }
+        .details-content li { margin-bottom: 8px; }
+
+        footer { width: 100%; max-width: 450px; padding: 40px 20px; text-align: center; box-sizing: border-box; }
+        .btn { 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 16px; border-radius: 16px; margin-bottom: 12px; 
+            text-decoration: none; color: white; font-weight: 700; 
+            transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .whatsapp { background-color: #25D366; }
+        .instagram { background-color: #E4405F; }
+        .legal { font-size: 0.7rem; color: #a8a29e; margin-top: 30px; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script is:inline>
-        const services = [
-            { id: 1, title: "Relevamiento y Mapeo", details: ["Cartografía base de alta resolución", "Monitoreo satelital (Sentinel-2)", "Topografía digital", "Índices NDVI"], color: "bg-stone-100" },
-            { id: 2, title: "Caminería Rural", details: ["Trazado óptimo según relieve", "Integración con drenajes", "Planos de detalle"], color: "bg-stone-100" },
-            { id: 3, title: "Gestión del Agua", details: ["Identificación de microcuencas", "Cosecha de agua", "Sistemas de riego"], color: "bg-blue-50" },
-            { id: 4, title: "Prevención de Incendios", details: ["Mapas de riesgo", "Cortafuegos productivos", "Planes de restauración"], color: "bg-orange-50" },
-            { id: 5, title: "Planificación Agroecológica", details: ["Diseño integral de campos", "Diagnóstico de fertilidad", "Sistemas silvopastoriles"], color: "bg-green-100" },
-            { id: 6, title: "Análisis Territorial", details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"], color: "bg-slate-100" }
-        ];
+    <header>
+        <img src="/logo.png" alt="Trama" class="logo" />
+        <p class="tagline">"Cada territorio tiene una trama que espera ser regenerada."</p>
+    </header>
 
-        function App() {
-            const [activeTab, setActiveTab] = React.useState(null);
+    <section class="hero">
+        <h2 style="margin: 0 0 10px 0; font-size: 1.5rem;">Planificación Predial</h2>
+        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem; line-height: 1.5;">Tecnología de precisión y principios regenerativos para transformar tu territorio en un sistema resiliente.</p>
+    </section>
 
-            const e = React.createElement;
+    <main class="services-section">
+        <p class="section-title">Nuestros Servicios</p>
+        {services.map(s => (
+            <details>
+                <summary>{s.title}</summary>
+                <div class="details-content">
+                    <ul>
+                        {s.details.map(d => <li>{d}</li>)}
+                    </ul>
+                </div>
+            </details>
+        ))}
+    </main>
 
-            return e('div', { className: 'min-h-screen flex flex-col' }, [
-                // Header con Logo
-                e('header', { className: 'bg-white px-6 pt-10 pb-8 border-b border-stone-100 flex flex-col items-center' }, [
-                    e('img', { src: '/logo.png', className: 'w-full max-w-[250px] h-auto mb-4' }),
-                    e('p', { className: 'text-center text-sm italic text-stone-500 max-w-xs' }, 
-                        '"Cada territorio tiene una trama que espera ser regenerada."'
-                    )
-                ]),
+    <footer>
+        <h4 style="margin-bottom: 20px;">Comencemos tu regeneración</h4>
+        <a href="https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" target="_blank" class="btn whatsapp">
+            WhatsApp
+        </a>
+        <a href="https://instagram.com/trama.agroecologia" target="_blank" class="btn instagram">
+            Instagram
+        </a>
+        <p class="legal">Trama · El Bolsón, Patagonia</p>
+    </footer>
 
-                // Hero interactivo
-                e('section', { className: 'px-6 py-8' }, 
-                    e('div', { className: 'bg-[#3a4a2c] rounded-3xl p-7 text-white shadow-xl' }, [
-                        e('h2', { className: 'text-2xl font-bold mb-2' }, 'Planificación Predial'),
-                        e('p', { className: 'text-white/80 text-sm leading-relaxed' }, 
-                            'Tecnología de precisión y principios regenerativos para tu territorio.'
-                        )
-                    ])
-                ),
-
-                // Lista de Servicios (Acordeón)
-                e('main', { className: 'px-6 space-y-4 flex-grow' }, [
-                    e('h3', { className: 'text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2' }, 'Nuestros Servicios'),
-                    services.map(s => e('div', { key: s.id, className: 'rounded-2xl border border-stone-100 bg-white overflow-hidden shadow-sm' }, [
-                        e('button', { 
-                            className: 'w-full text-left p-5 flex items-center justify-between',
-                            onClick: () => setActiveTab(activeTab === s.id ? null : s.id)
-                        }, [
-                            e('div', { className: 'flex items-center gap-4' }, [
-                                e('div', { className: `p-2 rounded-lg ${s.color}` }, '•'),
-                                e('span', { className: 'font-bold text-base' }, s.title)
-                            ]),
-                            e('span', { className: `text-xl transition-transform ${activeTab === s.id ? 'rotate-45' : ''}` }, '+')
-                        ]),
-                        activeTab === s.id && e('div', { className: 'px-14 pb-6 animate-in fade-in' }, 
-                            e('ul', { className: 'space-y-2' }, 
-                                s.details.map(d => e('li', { key: d, className: 'text-sm text-stone-600 flex items-center gap-2' }, [
-                                    e('span', { className: 'text-[#acc670]' }, '✓'), d
-                                ]))
-                            )
-                        )
-                    ]))
-                ]),
-
-                // Footer con Botones de Contacto
-                e('footer', { className: 'px-6 py-12 bg-white mt-12 border-t border-stone-100 text-center' }, [
-                    e('h4', { className: 'font-bold text-lg mb-6' }, 'Comencemos tu regeneración'),
-                    e('div', { className: 'flex flex-col gap-4 max-w-sm mx-auto' }, [
-                        e('a', { 
-                            href: "https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web",
-                            target: "_blank",
-                            className: 'bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:scale-105 transition-transform no-underline'
-                        }, 'WhatsApp'),
-                        e('a', { 
-                            href: "https://instagram.com/trama.agroecologia",
-                            target: "_blank",
-                            className: 'bg-[#E4405F] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:scale-105 transition-transform no-underline'
-                        }, 'Instagram')
-                    ]),
-                    e('p', { className: 'mt-10 text-[10px] text-stone-400 font-bold uppercase tracking-widest' }, 
-                        'Trama · El Bolsón, Patagonia'
-                    )
-                ])
-            ]);
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(e(App));
-    </script>
 </body>
 </html>
