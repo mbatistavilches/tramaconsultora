@@ -1,187 +1,108 @@
-// Configuración de Trama const logoUrl = "/logo.png"; const imagenFondoUrl = "/trama-topo.png"; const bgColor = "#48542B"; // Fondo Verde Trama const accentColor = "#97b968"; // Verde Claro Trama
-
+---
+// TRAMA - Web Unificada (Linktree + Servicios Interactivos)
+---
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TRAMA - Paisajes Agroecológicos</title>
-<link rel="preconnect" href="https://www.google.com/search?q=https://fonts.googleapis.com">
-<link rel="preconnect" href="https://www.google.com/search?q=https://fonts.gstatic.com" crossorigin>
-<link href="https://www.google.com/search?q=https://fonts.googleapis.com/css2%3Ffamily%3DInter:wght%40400%3B600%3B700%3B800%26family%3DOpen%2BSans:wght%40700%3B800%26display%3Dswap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRAMA - Paisajes Agroecológicos</title>
+    <meta property="og:title" content="TRAMA - Paisajes Agroecológicos" />
+    <meta property="og:description" content="Diseño y planificación de paisajes productivos y resilientes en la Patagonia." />
+    <meta property="og:image" content="https://tramaconsultora.com.ar/og-image.png" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #FDFCF8; color: #3a4a2c; }
+    </style>
 </head>
 <body>
-<main>
-<header>
-<img src={logoUrl} alt="Trama" class="logo" />
-<p class="tagline">Paisajes Productivos y Regeneración</p>
-</header>
+    <div id="root"></div>
 
-    <section class="hero-card">
-        <h2>Planificación Predial</h2>
-        <p>Combinamos tecnología de precisión con principios regenerativos para transformar tu territorio.</p>
-    </section>
+    <script is:inline>
+        const services = [
+            { id: 1, title: "Relevamiento y Mapeo", details: ["Cartografía base de alta resolución", "Monitoreo satelital (Sentinel-2)", "Topografía digital", "Índices NDVI"], color: "bg-stone-100" },
+            { id: 2, title: "Caminería Rural", details: ["Trazado óptimo según relieve", "Integración con drenajes", "Planos de detalle"], color: "bg-stone-100" },
+            { id: 3, title: "Gestión del Agua", details: ["Identificación de microcuencas", "Cosecha de agua", "Sistemas de riego"], color: "bg-blue-50" },
+            { id: 4, title: "Prevención de Incendios", details: ["Mapas de riesgo", "Cortafuegos productivos", "Planes de restauración"], color: "bg-orange-50" },
+            { id: 5, title: "Planificación Agroecológica", details: ["Diseño integral de campos", "Diagnóstico de fertilidad", "Sistemas silvopastoriles"], color: "bg-green-100" },
+            { id: 6, title: "Análisis Territorial", details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"], color: "bg-slate-100" }
+        ];
 
-    <div class="services-container">
-        <h3 class="section-title">NUESTROS SERVICIOS</h3>
-        
-        <!-- ACORDEÓN 1 -->
-        <details class="service-item">
-            <summary>
-                <span class="icon">📍</span>
-                <span class="title">Relevamiento y Mapeo</span>
-                <span class="chevron">▼</span>
-            </summary>
-            <div class="content">
-                <p>Conocé tu terreno en detalle con cartografía de alta precisión y tecnología dron RTK.</p>
-                <ul>
-                    <li>Cartografía base alta resolución</li>
-                    <li>Monitoreo satelital periódico</li>
-                    <li>Topografía digital</li>
-                </ul>
-                <img src="/data/servicio_1.jpg" alt="Mapeo" class="service-img" onerror="this.style.display='none'"/>
-            </div>
-        </details>
+        function App() {
+            const [activeTab, setActiveTab] = React.useState(null);
 
-        <!-- ACORDEÓN 2 -->
-        <details class="service-item">
-            <summary>
-                <span class="icon">🛣️</span>
-                <span class="title">Caminería Rural</span>
-                <span class="chevron">▼</span>
-            </summary>
-            <div class="content">
-                <p>Accesos eficientes que respetan la topografía y el paisaje.</p>
-                <ul>
-                    <li>Trazado óptimo de caminos</li>
-                    <li>Drenajes naturales</li>
-                    <li>Planos de detalle</li>
-                </ul>
-                <img src="/data/servicio_2.jpg" alt="Caminos" class="service-img" onerror="this.style.display='none'"/>
-            </div>
-        </details>
+            const e = React.createElement;
 
-        <!-- ACORDEÓN 3 -->
-        <details class="service-item">
-            <summary>
-                <span class="icon">💧</span>
-                <span class="title">Gestión del Agua</span>
-                <span class="chevron">▼</span>
-            </summary>
-            <div class="content">
-                <p>Diseño de sistemas de captación y distribución para producción y vivienda.</p>
-                <ul>
-                    <li>Identificación de cuencas</li>
-                    <li>Cosecha de agua y embalses</li>
-                    <li>Sistemas de riego</li>
-                </ul>
-                <img src="/data/servicio_3.jpg" alt="Agua" class="service-img" onerror="this.style.display='none'"/>
-            </div>
-        </details>
+            return e('div', { className: 'min-h-screen flex flex-col' }, [
+                // Header con Logo
+                e('header', { className: 'bg-white px-6 pt-10 pb-8 border-b border-stone-100 flex flex-col items-center' }, [
+                    e('img', { src: '/logo.png', className: 'w-full max-w-[250px] h-auto mb-4' }),
+                    e('p', { className: 'text-center text-sm italic text-stone-500 max-w-xs' }, 
+                        '"Cada territorio tiene una trama que espera ser regenerada."'
+                    )
+                ]),
 
-        <!-- Puedes seguir agregando el resto de los servicios siguiendo la misma estructura -->
+                // Hero interactivo
+                e('section', { className: 'px-6 py-8' }, 
+                    e('div', { className: 'bg-[#3a4a2c] rounded-3xl p-7 text-white shadow-xl' }, [
+                        e('h2', { className: 'text-2xl font-bold mb-2' }, 'Planificación Predial'),
+                        e('p', { className: 'text-white/80 text-sm leading-relaxed' }, 
+                            'Tecnología de precisión y principios regenerativos para tu territorio.'
+                        )
+                    ])
+                ),
 
-    </div>
+                // Lista de Servicios (Acordeón)
+                e('main', { className: 'px-6 space-y-4 flex-grow' }, [
+                    e('h3', { className: 'text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2' }, 'Nuestros Servicios'),
+                    services.map(s => e('div', { key: s.id, className: 'rounded-2xl border border-stone-100 bg-white overflow-hidden shadow-sm' }, [
+                        e('button', { 
+                            className: 'w-full text-left p-5 flex items-center justify-between',
+                            onClick: () => setActiveTab(activeTab === s.id ? null : s.id)
+                        }, [
+                            e('div', { className: 'flex items-center gap-4' }, [
+                                e('div', { className: `p-2 rounded-lg ${s.color}` }, '•'),
+                                e('span', { className: 'font-bold text-base' }, s.title)
+                            ]),
+                            e('span', { className: `text-xl transition-transform ${activeTab === s.id ? 'rotate-45' : ''}` }, '+')
+                        ]),
+                        activeTab === s.id && e('div', { className: 'px-14 pb-6 animate-in fade-in' }, 
+                            e('ul', { className: 'space-y-2' }, 
+                                s.details.map(d => e('li', { key: d, className: 'text-sm text-stone-600 flex items-center gap-2' }, [
+                                    e('span', { className: 'text-[#acc670]' }, '✓'), d
+                                ]))
+                            )
+                        )
+                    ]))
+                ]),
 
-    <footer>
-        <a href="https://wa.me/5491155119496" class="btn-whatsapp" target="_blank">WhatsApp</a>
-        <a href="https://instagram.com/trama.paisajes" class="btn-instagram" target="_blank">Instagram</a>
-        <p class="copyright">Trama · Paisajes Agroecológicos</p>
-    </footer>
-</main>
+                // Footer con Botones de Contacto
+                e('footer', { className: 'px-6 py-12 bg-white mt-12 border-t border-stone-100 text-center' }, [
+                    e('h4', { className: 'font-bold text-lg mb-6' }, 'Comencemos tu regeneración'),
+                    e('div', { className: 'flex flex-col gap-4 max-w-sm mx-auto' }, [
+                        e('a', { 
+                            href: "https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web",
+                            target: "_blank",
+                            className: 'bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:scale-105 transition-transform no-underline'
+                        }, 'WhatsApp'),
+                        e('a', { 
+                            href: "https://instagram.com/trama.agroecologia",
+                            target: "_blank",
+                            className: 'bg-[#E4405F] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-lg hover:scale-105 transition-transform no-underline'
+                        }, 'Instagram')
+                    ]),
+                    e('p', { className: 'mt-10 text-[10px] text-stone-400 font-bold uppercase tracking-widest' }, 
+                        'Trama · El Bolsón, Patagonia'
+                    )
+                ])
+            ]);
+        }
 
-<img src={imagenFondoUrl} alt="" class="bg-element" />
-
-<style define:vars={{ bgColor, accentColor }}>
-    body { 
-        background-color: var(--bgColor); 
-        font-family: 'Inter', sans-serif; 
-        margin: 0;
-        padding: 1.5rem;
-        color: white;
-        display: flex;
-        justify-content: center;
-    }
-
-    main { width: 100%; max-width: 450px; z-index: 10; }
-
-    header { text-align: center; margin-bottom: 2rem; }
-    .logo { max-width: 180px; height: auto; }
-    .tagline { 
-        font-size: 0.75rem; 
-        color: var(--accentColor); 
-        text-transform: uppercase; 
-        letter-spacing: 2px; 
-        font-weight: 800;
-        margin-top: 0.5rem;
-    }
-
-    .hero-card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        padding: 1.5rem;
-        border-radius: 24px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-    .hero-card h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; }
-    .hero-card p { margin: 0; font-size: 0.85rem; opacity: 0.8; line-height: 1.4; }
-
-    .section-title { font-size: 0.65rem; letter-spacing: 2px; opacity: 0.5; margin-bottom: 1rem; }
-
-    .services-container { display: flex; flex-direction: column; gap: 0.75rem; }
-
-    .service-item {
-        background: white;
-        color: #3a4a2c;
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    summary {
-        padding: 1.2rem;
-        list-style: none;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 0.9rem;
-    }
-    summary::-webkit-details-marker { display: none; }
-
-    .chevron { margin-left: auto; font-size: 0.6rem; opacity: 0.3; transition: transform 0.3s; }
-    details[open] .chevron { transform: rotate(180deg); }
-
-    .content { padding: 0 1.2rem 1.2rem 1.2rem; font-size: 0.85rem; border-top: 1px solid #f0f0f0; padding-top: 1rem; }
-    .content p { margin: 0 0 1rem 0; line-height: 1.5; color: #666; }
-    .content ul { padding-left: 1.2rem; margin-bottom: 1rem; color: #444; }
-    .content li { margin-bottom: 0.4rem; }
-
-    .service-img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 12px;
-        background: #eee;
-    }
-
-    footer { margin-top: 3rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    footer a { 
-        text-align: center; 
-        padding: 1.1rem; 
-        border-radius: 16px; 
-        text-decoration: none; 
-        color: white; 
-        font-weight: 700;
-        font-size: 0.9rem;
-    }
-    .btn-whatsapp { background: #25D366; }
-    .btn-instagram { background: #E4405F; }
-    .copyright { font-size: 0.6rem; opacity: 0.4; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
-
-    .bg-element { position: fixed; bottom: -20px; right: -20px; width: 180px; opacity: 0.3; pointer-events: none; z-index: 1; }
-</style>
-
-
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(e(App));
+    </script>
 </body>
 </html>
