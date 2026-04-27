@@ -1,16 +1,16 @@
 ---
-// TRAMA - Web Unificada Robusta
-const bgColor = "#FDFCF8";
+// TRAMA - Versión Final Estable
+const bgColor = "#48542B"; // El verde oliva solicitado
 const darkGreen = "#3a4a2c";
 const accentGreen = "#acc670";
 
 const services = [
-    { id: 1, title: "Relevamiento y Mapeo", details: ["Cartografía base de alta resolución", "Monitoreo satelital (Sentinel-2)", "Topografía digital", "Índices NDVI"] },
-    { id: 2, title: "Caminería Rural", details: ["Trazado óptimo según relieve", "Integración con drenajes", "Planos de detalle"] },
-    { id: 3, title: "Gestión del Agua", details: ["Identificación de microcuencas", "Cosecha de agua", "Sistemas de riego"] },
-    { id: 4, title: "Prevención de Incendios", details: ["Mapas de riesgo", "Cortafuegos productivos", "Planes de restauración"] },
-    { id: 5, title: "Planificación Agroecológica", details: ["Diseño integral de campos", "Diagnóstico de fertilidad", "Sistemas silvopastoriles"] },
-    { id: 6, title: "Análisis Territorial", details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"] }
+    { id: 1, title: "Relevamiento y Mapeo", details: ["Cartografía base de alta resolución", "Monitoreo satelital (Sentinel-2)", "Topografía digital", "Índices NDVI"], img: "/data/servicio_1.jpg" },
+    { id: 2, title: "Caminería Rural", details: ["Trazado óptimo según relieve", "Integración con drenajes", "Planos de detalle"], img: "/data/servicio_2.jpg" },
+    { id: 3, title: "Gestión del Agua", details: ["Identificación de microcuencas", "Cosecha de agua", "Sistemas de riego"], img: "/data/servicio_3.jpg" },
+    { id: 4, title: "Prevención de Incendios", details: ["Mapas de riesgo", "Cortafuegos productivos", "Planes de restauración"], img: "/data/servicio_4.jpg" },
+    { id: 5, title: "Planificación Agroecológica", details: ["Diseño integral de campos", "Diagnóstico de fertilidad", "Sistemas silvopastoriles"], img: "/data/servicio_5.jpg" },
+    { id: 6, title: "Análisis Territorial", details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"], img: "/data/servicio_6.jpg" }
 ];
 ---
 
@@ -20,57 +20,66 @@ const services = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRAMA - Paisajes Agroecológicos</title>
     <style define:vars={{ bgColor, darkGreen, accentGreen }}>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
         
         body { 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Open Sans', sans-serif; 
             background-color: var(--bgColor); 
-            color: var(--darkGreen); 
+            color: white; 
             margin: 0; 
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        header { width: 100%; max-width: 500px; text-align: center; padding: 40px 20px; box-sizing: border-box; }
-        .logo { max-width: 250px; height: auto; margin-bottom: 15px; }
-        .tagline { font-style: italic; color: #78716c; font-size: 0.9rem; margin: 0; }
+        header { width: 100%; max-width: 500px; text-align: center; padding: 40px 20px; z-index: 10; }
+        .logo { max-width: 180px; height: auto; margin-bottom: 15px; }
+        .tagline { font-style: italic; color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0; }
 
-        .hero { 
-            width: 90%; max-width: 450px; 
-            background-color: var(--darkGreen); 
-            color: white; 
-            padding: 30px; 
-            border-radius: 24px; 
-            margin-bottom: 30px; 
-            box-shadow: 0 10px 15px -3px rgba(58, 74, 44, 0.2);
-            box-sizing: border-box;
-        }
+        /* Contenedor de Servicios (Acordeón) */
+        .services-section { width: 90%; max-width: 450px; margin-bottom: 40px; z-index: 10; }
+        .section-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 15px; text-align: center; }
 
-        .services-section { width: 90%; max-width: 450px; margin-bottom: 40px; }
-        .section-title { font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #a8a29e; margin-bottom: 15px; }
-
-        details { background: white; border: 1px solid #e7e5e4; border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
-        summary { padding: 20px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-        summary::-webkit-details-marker { display: none; }
+        details { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; margin-bottom: 12px; backdrop-filter: blur(5px); }
+        summary { padding: 20px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s; }
+        summary:hover { background: rgba(255, 255, 255, 0.1); }
         summary::after { content: '+'; font-size: 1.2rem; color: var(--accentGreen); }
         details[open] summary::after { content: '−'; }
         
-        .details-content { padding: 0 20px 20px 20px; font-size: 0.9rem; color: #57534e; }
-        .details-content ul { padding-left: 20px; margin: 0; }
-        .details-content li { margin-bottom: 8px; }
+        .details-content { padding: 0 20px 20px 20px; font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+        .details-content ul { padding-left: 20px; margin: 0 0 15px 0; }
+        .service-img { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; }
 
-        footer { width: 100%; max-width: 450px; padding: 40px 20px; text-align: center; box-sizing: border-box; }
+        /* Botones Animados */
+        footer { width: 100%; max-width: 450px; padding: 20px; text-align: center; z-index: 10; margin-bottom: 60px; }
         .btn { 
             display: flex; align-items: center; justify-content: center; 
-            padding: 16px; border-radius: 16px; margin-bottom: 12px; 
+            padding: 18px; border-radius: 16px; margin-bottom: 15px; 
             text-decoration: none; color: white; font-weight: 700; 
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .btn:active { transform: scale(0.98); }
+        .btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
         .whatsapp { background-color: #25D366; }
         .instagram { background-color: #E4405F; }
-        .legal { font-size: 0.7rem; color: #a8a29e; margin-top: 30px; font-weight: 700; text-transform: uppercase; }
+
+        /* Elemento de fondo abajo a la derecha */
+        .bg-element {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            max-width: 300px;
+            width: 60%;
+            height: auto;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 600px) { .bg-element { max-width: 200px; } }
     </style>
 </head>
 <body>
@@ -80,13 +89,8 @@ const services = [
         <p class="tagline">"Cada territorio tiene una trama que espera ser regenerada."</p>
     </header>
 
-    <section class="hero">
-        <h2 style="margin: 0 0 10px 0; font-size: 1.5rem;">Planificación Predial</h2>
-        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem; line-height: 1.5;">Tecnología de precisión y principios regenerativos para transformar tu territorio en un sistema resiliente.</p>
-    </section>
-
     <main class="services-section">
-        <p class="section-title">Nuestros Servicios</p>
+        <p class="section-title">Servicios Técnicos</p>
         {services.map(s => (
             <details>
                 <summary>{s.title}</summary>
@@ -94,21 +98,23 @@ const services = [
                     <ul>
                         {s.details.map(d => <li>{d}</li>)}
                     </ul>
+                    <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
                 </div>
             </details>
         ))}
     </main>
 
     <footer>
-        <h4 style="margin-bottom: 20px;">Comencemos tu regeneración</h4>
         <a href="https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" target="_blank" class="btn whatsapp">
             WhatsApp
         </a>
-        <a href="https://instagram.com/trama.agroecologia" target="_blank" class="btn instagram">
+        <a href="https://instagram.com/trama.paisajes" target="_blank" class="btn instagram">
             Instagram
         </a>
-        <p class="legal">Trama · El Bolsón, Patagonia</p>
+        <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · PATAGONIA</p>
     </footer>
+
+    <img src="https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/trama-topo.png" alt="" class="bg-element" />
 
 </body>
 </html>
