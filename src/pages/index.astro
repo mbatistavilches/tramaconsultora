@@ -90,18 +90,18 @@ const services = [
     </header>
 
     <main class="services-section">
-        <p class="section-title">Servicios Técnicos</p>
-        {services.map(s => (
+    <p class="section-title">Servicios Técnicos</p>
+    {services.map(s => (
             <details>
                 <summary>{s.title}</summary>
-                <div class="details-content">
-                    <ul>
-                        {s.details.map(d => <li>{d}</li>)}
-                    </ul>
-                    <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
-                </div>
-            </details>
-        ))}
+            <div class="details-content">
+                <ul>
+                    {s.details.map(d => <li>{d}</li>)}
+                </ul>
+                <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
+            </div>
+        </details>
+    ))} 
     </main>
 
     <footer>
@@ -115,6 +115,22 @@ const services = [
     </footer>
 
     <img src="https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/trama-topo.png" alt="" class="bg-element" />
+<script is:inline>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Abre el desplegable cuando entra en el campo visual
+                entry.target.setAttribute('open', '');
+            } else {
+                // Lo cierra cuando sale (opcional, para mantener el foco)
+                entry.target.removeAttribute('open');
+            }
+        });
+    }, { threshold: 0.8 }); // Se activa cuando el 80% del elemento es visible
 
+    document.querySelectorAll('details').forEach(details => {
+        observer.observe(details);
+    });
+</script>
 </body>
 </html>
