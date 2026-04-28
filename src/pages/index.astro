@@ -1,6 +1,6 @@
 ---
-// TRAMA - Versión Final Estable
-const bgColor = "#48542B"; // El verde oliva solicitado
+// TRAMA - Versión Final Estable Corregida
+const bgColor = "#48542B"; 
 const darkGreen = "#3a4a2c";
 const accentGreen = "#acc670";
 
@@ -35,12 +35,12 @@ const services = [
             position: relative;
         }
 
-        header { width: 100%; max-width: 500px; text-align: center; padding: 40px 20px; z-index: 10; }
+        header { width: 100%; max-width: 500px; text-align: center; padding: 40px 20px; z-index: 10; box-sizing: border-box; }
         .logo { max-width: 180px; height: auto; margin-bottom: 15px; }
         .tagline { font-style: italic; color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0; }
 
-        /* Contenedor de Servicios (Acordeón) */
-        .services-section { width: 90%; max-width: 450px; margin-bottom: 40px; z-index: 10; }
+        /* Contenedor de Servicios */
+        .services-section { width: 100%; max-width: 450px; padding: 0 20px; margin-bottom: 40px; z-index: 10; box-sizing: border-box; }
         .section-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 15px; text-align: center; }
 
         details { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; margin-bottom: 12px; backdrop-filter: blur(5px); }
@@ -53,12 +53,14 @@ const services = [
         .details-content ul { padding-left: 20px; margin: 0 0 15px 0; }
         .service-img { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; }
 
-        /* Botones Animados */
-        footer { width: 100%; max-width: 450px; padding: 20px; text-align: center; z-index: 10; margin-bottom: 60px; }
+        /* Botones Unificados y Responsivos */
+        footer { width: 100%; max-width: 450px; padding: 20px; text-align: center; z-index: 10; margin-bottom: 60px; box-sizing: border-box; }
         .btn { 
             display: flex; align-items: center; justify-content: center; 
+            width: 100%; /* Ancho completo del contenedor */
             padding: 18px; border-radius: 16px; margin-bottom: 15px; 
             text-decoration: none; color: white; font-weight: 700; 
+            box-sizing: border-box; /* Importante para que el padding no desborde */
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
@@ -66,7 +68,6 @@ const services = [
         .whatsapp { background-color: #25D366; }
         .instagram { background-color: #E4405F; }
 
-        /* Elemento de fondo abajo a la derecha */
         .bg-element {
             position: fixed;
             bottom: 0;
@@ -90,47 +91,31 @@ const services = [
     </header>
 
     <main class="services-section">
-    <p class="section-title">Servicios Técnicos</p>
-    {services.map(s => (
-            <details>
+        <p class="section-title">Servicios Técnicos</p>
+        {services.map(s => (
+            <details name="servicios">
                 <summary>{s.title}</summary>
-            <div class="details-content">
-                <ul>
-                    {s.details.map(d => <li>{d}</li>)}
-                </ul>
-                <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
-            </div>
-        </details>
-    ))} 
+                <div class="details-content">
+                    <ul>
+                        {s.details.map(d => <li>{d}</li>)}
+                    </ul>
+                    <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
+                </div>
+            </details>
+        ))} 
     </main>
 
     <footer>
         <a href="https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" target="_blank" class="btn whatsapp">
-            WhatsApp
+            Contactar
         </a>
         <a href="https://instagram.com/trama.paisajes" target="_blank" class="btn instagram">
-            Instagram
+            Seguir en redes
         </a>
         <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · PATAGONIA</p>
     </footer>
 
     <img src="https://raw.githubusercontent.com/mbatistavilches/tramaconsultora/main/public/trama-topo.png" alt="" class="bg-element" />
-<script is:inline>
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Abre el desplegable cuando entra en el campo visual
-                entry.target.setAttribute('open', '');
-            } else {
-                // Lo cierra cuando sale (opcional, para mantener el foco)
-                entry.target.removeAttribute('open');
-            }
-        });
-    }, { threshold: 0.8 }); // Se activa cuando el 80% del elemento es visible
 
-    document.querySelectorAll('details').forEach(details => {
-        observer.observe(details);
-    });
-</script>
 </body>
 </html>
