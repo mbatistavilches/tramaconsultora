@@ -1,14 +1,15 @@
 ---
 // TRAMA - Sub-web Manejo de Frutales
+import podasData from '../data/podas_comarca.json'; // Movido a src/data/ para que el build funcione
+
 const bgColor = "#48542B"; 
 const accentGreen = "#acc670";
-import podasData from '../public/data/podas_comarca.json';
 
+// Procesamos los puntos en el servidor
 const puntosLimpios = podasData.features.map(f => ({
     lat: f.geometry.coordinates[1],
     lng: f.geometry.coordinates[0]
 })).filter(p => p.lat && p.lng);
-
 ---
 
 <html lang="es">
@@ -18,256 +19,95 @@ const puntosLimpios = podasData.features.map(f => ({
     <title>Manejo de Frutales - TRAMA</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 
     <style define:vars={{ bgColor, accentGreen }}>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
-        
-        body { 
-            font-family: 'Open Sans', sans-serif; 
-            background-color: var(--bgColor); 
-            color: white; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            min-height: 100vh;
-        }
-
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--bgColor); color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         header { width: 100%; max-width: 500px; text-align: center; padding: 30px 20px; }
         .back-link { text-decoration: none; color: var(--accentGreen); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
         .hero { padding: 20px; text-align: center; max-width: 450px; }
         h1 { font-size: 1.8rem; margin-bottom: 10px; }
         .subtitle { font-style: italic; opacity: 0.8; font-size: 1rem; margin-bottom: 30px; }
-
-        .diff-box { 
-            background: rgba(255,255,255,0.05); 
-            padding: 20px; 
-            border-radius: 20px; 
-            border-left: 4px solid var(--accentGreen);
-            margin: 0 20px 40px 20px;
-            font-size: 0.9rem;
-            max-width: 400px;
-        }
-
-        .packs-container { width: 100%; max-width: 450px; padding: 20px; box-sizing: border-box; }
-        .pack-card {
-            background: white;
-            color: var(--bgColor);
-            border-radius: 24px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        .pack-tag { 
-            position: absolute; top: -12px; right: 20px; 
-            background: var(--accentGreen); color: var(--bgColor); 
-            padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.7rem;
-        }
-        .pack-card h3 { margin: 0 0 15px 0; font-size: 1.4rem; color: #2c361a; }
-        .pack-card ul { padding: 0; list-style: none; margin-bottom: 20px; }
-        .pack-card li { margin-bottom: 10px; display: flex; gap: 10px; font-size: 0.9rem; }
-        .pack-card li::before { content: '✓'; color: var(--accentGreen); font-weight: 900; }
-
-        .services-section { width: 100%; max-width: 450px; padding: 0 20px; box-sizing: border-box; }
-        .section-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 15px; text-align: center; }
-
-        #map { 
-            height: 400px; 
-            width: 100%; 
-            border-radius: 24px; 
-            margin: 20px 0; 
-            border: 2px solid rgba(255,255,255,0.1);
-            z-index: 1; /* Bajamos el z-index para evitar conflictos con el header */
-        }
-
-        .marker-cluster-small { background-color: rgba(172, 198, 112, 0.6); }
-        .marker-cluster-small div { background-color: rgba(172, 198, 112, 0.9); color: #48542B; font-weight: bold; }
-        .leaflet-tile-pane { filter: sepia(0.5) hue-rotate(40deg) saturate(0.8) brightness(0.9); }
-
-        footer { 
-            width: 100%; 
-            max-width: 450px; 
-            padding: 40px 20px; 
-            text-align: center; 
-            box-sizing: border-box;
-        }
-        .btn { 
-            display: flex; align-items: center; justify-content: center; 
-            width: 100%; padding: 18px; border-radius: 16px; margin-bottom: 15px; 
-            text-decoration: none; color: white; font-weight: 700; box-sizing: border-box;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+        .diff-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; border-left: 4px solid var(--accentGreen); margin: 0 20px 40px 20px; font-size: 0.9rem; max-width: 400px; }
+        .pack-card { background: white; color: var(--bgColor); border-radius: 24px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; width: 90%; max-width: 400px;}
+        .pack-tag { position: absolute; top: -12px; right: 20px; background: var(--accentGreen); color: var(--bgColor); padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.7rem; }
+        #map { height: 400px; width: 90%; max-width: 450px; border-radius: 24px; margin: 20px 0; border: 2px solid rgba(255,255,255,0.1); z-index: 1; }
+        footer { width: 100%; max-width: 450px; padding: 40px 20px; text-align: center; box-sizing: border-box; }
+        .btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 18px; border-radius: 16px; margin-bottom: 15px; text-decoration: none; color: white; font-weight: 700; box-sizing: border-box; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .whatsapp { background-color: #25D366; }
         .instagram { background-color: #E4405F; }
     </style>
 </head>
 <body>
-
-    <header>
-        <a href="/" class="back-link">← Volver al Menú</a>
-    </header>
+    <header><a href="/" class="back-link">← Volver al Menú</a></header>
 
     <section class="hero">
         <h1>Manejo de Frutales</h1>
-        <p class="subtitle">De mano de obra especializada a aliado productivo en tu chacra.</p>
+        <p class="subtitle">De mano de obra especializada a aliado productivo.</p>
     </section>
 
-    <div class="diff-box">
-        <strong>El diferencial Trama:</strong> No solo hacemos poda técnica. Aplicamos un enfoque agroecológico integral para asegurar que la plantación sea resiliente y productiva.
+    <div class="pack-card">
+        <span class="pack-tag">MÁS ELEGIDO</span>
+        <h3>Pack Inicial</h3>
+        <p style="font-size: 0.9rem;">Poda + Diagnóstico Escrito.</p>
     </div>
 
-    <main class="packs-container">
-        <div class="pack-card">
-            <span class="pack-tag">MÁS ELEGIDO</span>
-            <h3>Pack Inicial</h3>
-            <ul>
-                <li>Poda técnica estacional</li>
-                <li>Diagnóstico de plantación</li>
-                <li><strong>Entregable:</strong> Informe de estado + recomendaciones</li>
-            </ul>
-        </div>
-
-        <div class="pack-card">
-            <h3>Pack Intermedio</h3>
-            <ul>
-                <li>Todo lo del Pack Inicial</li>
-                <li>Plan de fertilidad biológica del suelo</li>
-                <li>Estrategia de sanidad vegetal</li>
-            </ul>
-        </div>
-
-        <div class="pack-card" style="border: 2px solid var(--accentGreen);">
-            <span class="pack-tag" style="background: var(--bgColor); color: white;">PREMIUM</span>
-            <h3>Gestión Integral</h3>
-            <ul>
-                <li>Todo lo del Pack Intermedio</li>
-                <li>Seguimiento estacional y visitas</li>
-                <li>Capacitación personalizada</li>
-            </ul>
-        </div>
-    </main>
-
-    <div class="diff-box" style="border-left-color: #ff9f43; font-style: italic;">
-        “¿Qué pasa si no podás correctamente 3 años seguidos? El costo de recuperar un frutal abandonado es 5 veces mayor al de un seguimiento planificado.”
-    </div>
-
-    <section class="services-section">
-        <p class="section-title">Nuestra Huella en la Comarca</p>
+    <section style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <p style="font-size: 0.7rem; font-weight: 800; opacity: 0.5; letter-spacing: 2px;">NUESTRA HUELLA EN LA COMARCA</p>
         <div id="map"></div>
     </section>
 
     <footer>
-        <a href="https://wa.me/5491155119496?text=Hola!%20Me%20interesa%20el%20servicio%20de%20Frutales" target="_blank" class="btn whatsapp">
-            Consultar Presupuesto
-        </a>
-        <a href="https://instagram.com/trama.paisajes" target="_blank" class="btn instagram">
-            Ver Casos de Éxito
-        </a>
-        <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · REGENERACIÓN</p>
+        <a href="https://wa.me/5491155119496" target="_blank" class="btn whatsapp">Consultar Presupuesto</a>
+        <a href="https://instagram.com/trama.paisajes" target="_blank" class="btn instagram">Instagram</a>
     </footer>
 
-<script define:vars={{ puntosLimpios }}>
-    window.PUNTOS_TRAMA = puntosLimpios;
-</script>
-  <script is:inline>
-  // 1. Cargamos las librerías de forma asíncrona pero secuencial
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = src;
-      s.async = true; 
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
+    <script define:vars={{ puntosLimpios }}>
+        window.PUNTOS_TRAMA = puntosLimpios;
+    </script>
 
-  async function initTramaMap() {
-    const container = document.getElementById('map');
-    if (!container) return;
-
-    try {
-      // Carga secuencial garantizada para evitar el error "L is undefined"
-      await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
-      await loadScript('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
-
-      // Inicialización del mapa con optimización para móviles
-      const map = L.map('map', {
-        scrollWheelZoom: false,
-        tap: true, // Habilita el toque en móviles
-        dragging: !L.Browser.mobile // Mejora el scroll en páginas largas
-      }).setView([-41.96, -71.53], 11);
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© Trama',
-        keepBuffer: 2 // Carga menos cuadros de mapa fuera de vista para ahorrar datos
-      }).addTo(map);
-
-      const markers = L.markerClusterGroup({
-          disableClusteringAtZoom: 16,
-          chunkedLoading: true // Procesa los puntos en fragmentos para no congelar el celular
-      });
-
-      const tramaIcon = L.divIcon({
-        className: "trama-marker",
-        iconAnchor: [6, 6],
-        html: `<div style="background:#acc670;width:12px;height:12px;border-radius:50%;border:2px solid #48542B;"></div>`
-      });
-// Borrá el fetch() y poné esto:
-if (window.PUNTOS_TRAMA) {
-    window.PUNTOS_TRAMA.forEach(p => {
-        const m = L.marker([p.lat, p.lng], { icon: tramaIcon });
-        m.bindPopup("<b>Intervención TRAMA</b>");
-        markers.addLayer(m);
-    });
-    
-    map.addLayer(markers);
-    
-    setTimeout(() => {
-        map.invalidateSize();
-        if (markers.getBounds().isValid()) {
-            map.fitBounds(markers.getBounds(), { padding: [30, 30] });
+    <script is:inline>
+        function loadJS(src) {
+            return new Promise((resolve) => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                document.head.appendChild(s);
+            });
         }
-    }, 500);
-}
-      // Intentar cargar datos localmente primero para velocidad
-      const response = await fetch('/data/podas_comarca.json');
-      const data = await response.json();
 
-      if (data.features) {
-        data.features.forEach(f => {
-          const c = f.geometry.coordinates;
-          const m = L.marker([c[1], c[0]], { icon: tramaIcon });
-          m.bindPopup("Intervención TRAMA");
-          markers.addLayer(m);
-        });
-        map.addLayer(markers);
-        
-        // El invalidateSize es clave en móviles tras cambios de orientación
-        setTimeout(() => { 
-            map.invalidateSize();
-            if (markers.getBounds().isValid()) {
-                map.fitBounds(markers.getBounds(), { padding: [20, 20] });
+        async function init() {
+            if (typeof L === 'undefined') {
+                await loadJS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+                await loadJS('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
             }
-        }, 300);
-      }
-    } catch (e) {
-      console.error("Error en carga móvil:", e);
-      container.innerHTML = "<p style='text-align:center;padding-top:150px;color:#acc670'>Cargando mapa interactivo...</p>";
-    }
-  }
 
-  // Usamos 'requestIdleCallback' si está disponible (mejor para móviles)
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => setTimeout(initTramaMap, 1000));
-  } else {
-    window.addEventListener('load', () => setTimeout(initTramaMap, 1500));
-  }
-</script>
+            const map = L.map('map', { scrollWheelZoom: false }).setView([-41.96, -71.53], 11);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            const markers = L.markerClusterGroup({ showCoverageOnHover: false });
+            const tramaIcon = L.divIcon({
+                className: "trama-marker",
+                html: `<div style="background:#acc670;width:12px;height:12px;border-radius:50%;border:2px solid #48542B;"></div>`
+            });
+
+            if (window.PUNTOS_TRAMA) {
+                window.PUNTOS_TRAMA.forEach(p => {
+                    markers.addLayer(L.marker([p.lat, p.lng], { icon: tramaIcon }));
+                });
+                map.addLayer(markers);
+                setTimeout(() => {
+                    map.invalidateSize();
+                    if (markers.getBounds().isValid()) {
+                        map.fitBounds(markers.getBounds(), { padding: [30, 30] });
+                    }
+                }, 500);
+            }
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
