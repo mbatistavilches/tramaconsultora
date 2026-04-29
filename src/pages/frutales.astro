@@ -189,7 +189,7 @@ const accentGreen = "#acc670";
     var markers = L.markerClusterGroup();
 
     // 5. Cargar los datos desde tu archivo JSON en GitHub
-    fetch('/data/PODAS comarca.json')
+    fetch('/data/podas_comarca.json')
         .then(response => response.json())
         .then(data => {
             L.geoJSON(data, {
