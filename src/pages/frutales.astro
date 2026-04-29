@@ -10,9 +10,9 @@ const accentGreen = "#acc670";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manejo de Frutales - TRAMA</title>
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 
     <style define:vars={{ bgColor, accentGreen }}>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
@@ -164,76 +164,75 @@ const accentGreen = "#acc670";
         <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · REGENERACIÓN</p>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
 
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
+   <script is:inline>
+  function cargarScript(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = false; // Importante: mantiene el orden
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
 
-    <script is:inline>
-        function ejecutarMapa() {
-            // Verificamos que ambas librerías existan en memoria
-            if (typeof L === 'undefined' || typeof L.markerClusterGroup !== 'function') {
-                console.log("Reintentando carga de librerías...");
-                setTimeout(ejecutarMapa, 300);
-                return;
-            }
+  async function iniciarMapaTrama() {
+    try {
+      // Cargamos Leaflet primero
+      await cargarScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+      // Recién cuando Leaflet termina, cargamos los Clusters
+      await cargarScript('https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js');
 
-            const mapContainer = document.getElementById('map');
-            if (!mapContainer) return;
+      const map = L.map('map', { scrollWheelZoom: false }).setView([-41.96, -71.53], 12);
 
-            // Inicialización
-            const map = L.map('map', { scrollWheelZoom: false }).setView([-41.96, -71.53], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© Trama'
+      }).addTo(map);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© Trama'
-            }).addTo(map);
+      const tramaIcon = L.divIcon({
+        className: "trama-marker",
+        iconAnchor: [5, 5],
+        html: `<span style="background-color: #acc670; width: 12px; height: 12px; display: block; border-radius: 50%; border: 2px solid #48542B; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></span>`
+      });
 
-            const tramaIcon = L.divIcon({
-                className: "trama-marker",
-                iconAnchor: [5, 5],
-                html: `<span style="background-color: #acc670; width: 12px; height: 12px; display: block; border-radius: 50%; border: 2px solid #48542B; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></span>`
-            });
+      const markers = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 50
+      });
 
-            const markers = L.markerClusterGroup({
-                showCoverageOnHover: false,
-                maxClusterRadius: 50
-            });
+      const response = await fetch('https://tramaconsultora.com.ar/data/podas_comarca.json');
+      const data = await response.json();
 
-            // Carga de datos con ruta absoluta para evitar errores de sub-páginas
-            fetch('https://tramaconsultora.com.ar/data/podas_comarca.json')
-                .then(res => {
-                    if(!res.ok) throw new Error("No se pudo obtener el JSON");
-                    return res.json();
-                })
-                .then(data => {
-                    if (data && data.features) {
-                        data.features.forEach(f => {
-                            const c = f.geometry.coordinates;
-                            if (c && c.length >= 2) {
-                                // Google ordena [Long, Lat], Leaflet usa [Lat, Long]
-                                const m = L.marker([c[1], c[0]], { icon: tramaIcon });
-                                m.bindPopup("<b>Intervención TRAMA</b><br>Manejo de Frutales");
-                                markers.addLayer(m);
-                            }
-                        });
-                        map.addLayer(markers);
-                        
-                        // Ajuste de vista
-                        setTimeout(() => {
-                            map.invalidateSize();
-                            if (markers.getBounds().isValid()) {
-                                map.fitBounds(markers.getBounds(), { padding: [30, 30] });
-                            }
-                        }, 500);
-                    }
-                })
-                .catch(err => console.error("Error cargando puntos GPS:", err));
-        }
+      if (data && data.features) {
+        data.features.forEach(f => {
+          const c = f.geometry.coordinates;
+          if (c && c.length >= 2) {
+            const m = L.marker([c[1], c[0]], { icon: tramaIcon });
+            m.bindPopup("<b>Intervención TRAMA</b><br>Manejo de Frutales");
+            markers.addLayer(m);
+          }
+        });
+        map.addLayer(markers);
+        
+        setTimeout(() => {
+          map.invalidateSize();
+          if (markers.getBounds().isValid()) {
+            map.fitBounds(markers.getBounds(), { padding: [30, 30] });
+          }
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error crítico en el mapa:", error);
+    }
+  }
 
-        // Disparador de seguridad: espera a que todo el sitio cargue
-        window.onload = ejecutarMapa;
-    </script>
+  // Disparador único
+  if (document.readyState === 'complete') {
+    iniciarMapaTrama();
+  } else {
+    window.addEventListener('load', iniciarMapaTrama);
+  }
+</script>
 </body>
 </html>
