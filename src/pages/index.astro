@@ -148,11 +148,16 @@ summary::-webkit-details-marker { display: none; } /* Oculta la flecha por defec
         <p class="tagline">"Cada territorio tiene una trama que espera ser regenerada."</p>
     </header>
 
-    <main class="services-section">
+   <main class="services-section">
         <p class="section-title">Servicios Técnicos</p>
         {services.map(s => (
             <details name="servicios">
-                <summary>{s.title}</summary>
+                <summary>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="color: var(--accentGreen); display: flex;" set:html={s.icon} />
+                        {s.title}
+                    </div>
+                </summary>
                 <div class="details-content">
                     <ul>
                         {s.details.map(d => <li>{d}</li>)}
