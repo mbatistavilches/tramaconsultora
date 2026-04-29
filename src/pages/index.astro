@@ -46,6 +46,14 @@ const services = [
         icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
         details: ["Modelos 3D", "Informes técnicos", "Estudios de impacto visual"], 
         img: "/data/servicio_6.jpg" 
+    },
+    { 
+        id: 7, 
+        title: "Manejo de frutales", 
+        icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 7V2"/><path d="M15 7V2"/><path d="M12 13V7"/><path d="M12 7H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h7"/><path d="M12 7h7a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-7"/></svg>`,
+        details: ["Diagnóstico + recomendaciones", "Manejo de suelo y sanidad", "Seguimiento, poda y capacitación"], 
+        link: "#", // Aquí pondrás el link a la sub-web después
+        img: "/data/servicio_7.jpg" 
     }
 ];
 ---
@@ -100,6 +108,26 @@ const services = [
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+.btn-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background: rgba(172, 198, 112, 0.2); /* Color accentGreen con transparencia */
+    border: 1px solid var(--accentGreen);
+    color: var(--accentGreen);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.btn-more:hover {
+    background: var(--accentGreen);
+    color: var(--bgColor);
+}
         .btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
         .whatsapp { background-color: #25D366; }
         .instagram { background-color: #E4405F; }
@@ -149,24 +177,31 @@ summary::-webkit-details-marker { display: none; } /* Oculta la flecha por defec
     </header>
 
    <main class="services-section">
-        <p class="section-title">Servicios Técnicos</p>
-        {services.map(s => (
-            <details name="servicios">
-                <summary>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span style="color: var(--accentGreen); display: flex;" set:html={s.icon} />
-                        {s.title}
-                    </div>
-                </summary>
-                <div class="details-content">
-                    <ul>
-                        {s.details.map(d => <li>{d}</li>)}
-                    </ul>
-                    <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
+    <p class="section-title">Servicios Técnicos</p>
+    {services.map(s => (
+        <details name="servicios">
+            <summary>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="color: var(--accentGreen); display: flex;" set:html={s.icon} />
+                    {s.title}
                 </div>
-            </details>
-        ))} 
-    </main>
+            </summary>
+            <div class="details-content">
+                <ul>
+                    {s.details.map(d => <li>{d}</li>)}
+                </ul>
+                
+                {s.link && (
+                    <a href={s.link} class="btn-more">
+                        Ver detalles del servicio →
+                    </a>
+                )}
+
+                <img src={s.img} alt={s.title} class="service-img" onerror="this.style.display='none'" />
+            </div>
+        </details>
+    ))} 
+</main>
 
     <footer>
         <a href="https://wa.me/5491155119496?text=Hola%20llegu%C3%A9%20ac%C3%A1%20desde%20la%20web" target="_blank" class="btn whatsapp">
