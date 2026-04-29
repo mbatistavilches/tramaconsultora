@@ -9,9 +9,10 @@ const accentGreen = "#acc670";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manejo de Frutales - TRAMA</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" crossorigin="" />
 
     <style define:vars={{ bgColor, accentGreen }}>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
@@ -34,7 +35,6 @@ const accentGreen = "#acc670";
         h1 { font-size: 1.8rem; margin-bottom: 10px; }
         .subtitle { font-style: italic; opacity: 0.8; font-size: 1rem; margin-bottom: 30px; }
 
-        /* Estética de Diferenciación */
         .diff-box { 
             background: rgba(255,255,255,0.05); 
             padding: 20px; 
@@ -45,7 +45,6 @@ const accentGreen = "#acc670";
             max-width: 400px;
         }
 
-        /* Contenedor de Packs */
         .packs-container { width: 100%; max-width: 450px; padding: 20px; box-sizing: border-box; }
         .pack-card {
             background: white;
@@ -53,8 +52,8 @@ const accentGreen = "#acc670";
             border-radius: 24px;
             padding: 25px;
             margin-bottom: 25px;
-            position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
         }
         .pack-tag { 
             position: absolute; top: -12px; right: 20px; 
@@ -66,48 +65,38 @@ const accentGreen = "#acc670";
         .pack-card li { margin-bottom: 10px; display: flex; gap: 10px; font-size: 0.9rem; }
         .pack-card li::before { content: '✓'; color: var(--accentGreen); font-weight: 900; }
 
-            /* Botones de pie */
-            footer { 
-        width: 100%; 
-        max-width: 450px; 
-        padding: 20px; /* Asegura un margen de seguridad lateral */
-        text-align: center; 
-        z-index: 10; 
-        margin-bottom: 60px; 
-        box-sizing: border-box; /* CLAVE: Incluye el padding en el ancho total */
-        }    
-        .btn { 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        width: 100%;           /* Ocupa el ancho del footer */
-        max-width: 100%;       /* Garantiza que no se pase */
-        padding: 18px; 
-        border-radius: 16px; 
-        margin-bottom: 15px; 
-        text-decoration: none; 
-        color: white; 
-        font-weight: 700; 
-        box-sizing: border-box; /* CLAVE: El padding no "suma" ancho extra */
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-            .whatsapp { background-color: #25D366; }
-            .instagram { background-color: #E4405F; }
+        .services-section { width: 100%; max-width: 450px; padding: 0 20px; box-sizing: border-box; }
+        .section-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 15px; text-align: center; }
+
         #map { 
-        height: 400px; 
-        width: 100%; 
-        border-radius: 24px; 
-        margin: 20px 0; 
-        border: 2px solid rgba(255,255,255,0.1);
-        z-index: 5;
+            height: 400px; 
+            width: 100%; 
+            border-radius: 24px; 
+            margin: 20px 0; 
+            border: 2px solid rgba(255,255,255,0.1);
+            z-index: 1; /* Bajamos el z-index para evitar conflictos con el header */
         }
-        /* Personalización de los grupos de puntos (Clusters) con colores TRAMA */
+
         .marker-cluster-small { background-color: rgba(172, 198, 112, 0.6); }
         .marker-cluster-small div { background-color: rgba(172, 198, 112, 0.9); color: #48542B; font-weight: bold; }
-        
-        /* Inversión de colores para que el mapa OSM se vea más "nuestro" */
         .leaflet-tile-pane { filter: sepia(0.5) hue-rotate(40deg) saturate(0.8) brightness(0.9); }
+
+        footer { 
+            width: 100%; 
+            max-width: 450px; 
+            padding: 40px 20px; 
+            text-align: center; 
+            box-sizing: border-box;
+        }
+        .btn { 
+            display: flex; align-items: center; justify-content: center; 
+            width: 100%; padding: 18px; border-radius: 16px; margin-bottom: 15px; 
+            text-decoration: none; color: white; font-weight: 700; box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .whatsapp { background-color: #25D366; }
+        .instagram { background-color: #E4405F; }
     </style>
 </head>
 <body>
@@ -122,7 +111,7 @@ const accentGreen = "#acc670";
     </section>
 
     <div class="diff-box">
-        <strong>El diferencial Trama:</strong> No solo hacemos poda técnica. Aplicamos un enfoque agroecológico integral para asegurar que tu plantación sea resiliente y productiva a largo plazo.
+        <strong>El diferencial Trama:</strong> No solo hacemos poda técnica. Aplicamos un enfoque agroecológico integral para asegurar que la plantación sea resiliente y productiva.
     </div>
 
     <main class="packs-container">
@@ -131,8 +120,8 @@ const accentGreen = "#acc670";
             <h3>Pack Inicial</h3>
             <ul>
                 <li>Poda técnica estacional</li>
-                <li>Diagnóstico plantación</li>
-                <li><strong>Entregable:</strong> Informe escrito de estado + recomendaciones iniciales</li>
+                <li>Diagnóstico de vigor y productividad</li>
+                <li><strong>Entregable:</strong> Informe de estado + recomendaciones</li>
             </ul>
         </div>
 
@@ -141,7 +130,7 @@ const accentGreen = "#acc670";
             <ul>
                 <li>Todo lo del Pack Inicial</li>
                 <li>Plan de fertilidad biológica del suelo</li>
-                <li>Estrategia de sanidad vegetal agroecológica</li>
+                <li>Estrategia de sanidad vegetal</li>
             </ul>
         </div>
 
@@ -150,10 +139,8 @@ const accentGreen = "#acc670";
             <h3>Gestión Integral</h3>
             <ul>
                 <li>Todo lo del Pack Intermedio</li>
-                <li>Visitas de seguimiento estacionales</li>
-                <li>Capacitación personalizada en campo</li>
-                <li>Planificación anual de tareas</li>
-                <li>Asesoría vía WhatsApp para urgencias</li>
+                <li>Seguimiento estacional y visitas</li>
+                <li>Capacitación personalizada</li>
             </ul>
         </div>
     </main>
@@ -161,74 +148,14 @@ const accentGreen = "#acc670";
     <div class="diff-box" style="border-left-color: #ff9f43; font-style: italic;">
         “¿Qué pasa si no podás correctamente 3 años seguidos? El costo de recuperar un frutal abandonado es 5 veces mayor al de un seguimiento planificado.”
     </div>
-<section class="services-section">
-    <p class="section-title">Nuestra Huella en la Comarca</p>
-    <div id="map"></div>
-</section>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <section class="services-section">
+        <p class="section-title">Nuestra Huella en la Comarca</p>
+        <div id="map"></div>
+    </section>
 
-<script is:inline>
-    // 1. Inicializar el mapa
-    var map = L.map('map').setView([-41.96, -71.53], 11);
-
-    // 2. Capa base con filtro orgánico
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© Trama'
-    }).addTo(map);
-
-    var tramaIcon = L.icon({
-        iconUrl: '/logo.png',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
-    });
-
-    var markers = L.markerClusterGroup();
-
-    // 3. Fetch con manejo de errores robusto
-    fetch('/data/podas_comarca.json')
-        .then(response => {
-            if (!response.ok) throw new Error("Archivo no encontrado");
-            return response.json();
-        })
-        .then(data => {
-            // Verificamos si es GeoJSON estándar
-            if (data.type === "FeatureCollection") {
-                L.geoJSON(data, {
-                    pointToLayer: (f, latlng) => L.marker(latlng, { icon: tramaIcon }),
-                    onEachFeature: (f, layer) => layer.bindPopup("Intervención TRAMA")
-                }).eachLayer(l => markers.addLayer(l));
-            } 
-            // Si es un array simple de objetos [{lat:..., lng:...}]
-            else if (Array.isArray(data)) {
-                data.forEach(p => {
-                    const lat = p.lat || p.latitude || p.y;
-                    const lng = p.lng || p.longitude || p.x;
-                    if (lat && lng) {
-                        markers.addLayer(L.marker([lat, lng], { icon: tramaIcon }).bindPopup("Intervención TRAMA"));
-                    }
-                });
-            }
-
-            map.addLayer(markers);
-            
-            // Forzar re-render del mapa (Vital en Astro/SPA)
-            setTimeout(() => {
-                map.invalidateSize();
-                if (markers.getBounds().isValid()) {
-                    map.fitBounds(markers.getBounds(), { padding: [40, 40] });
-                }
-            }, 500);
-        })
-        .catch(err => {
-            console.error("Error técnico:", err);
-            // Fallback: centrar en El Bolsón si falla la carga
-            map.setView([-41.96, -71.53], 12);
-        });
-</script>
-<footer>
-        <a href="https://wa.me/5491155119496?text=Hola!%20Me%20interesa%20el%20servicio%20de%20Manejo%20de%20Frutales" target="_blank" class="btn whatsapp">
+    <footer>
+        <a href="https://wa.me/5491155119496?text=Hola!%20Me%20interesa%20el%20servicio%20de%20Frutales" target="_blank" class="btn whatsapp">
             Consultar Presupuesto
         </a>
         <a href="https://instagram.com/trama.paisajes" target="_blank" class="btn instagram">
@@ -237,5 +164,66 @@ const accentGreen = "#acc670";
         <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · REGENERACIÓN</p>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
+
+    <script is:inline>
+        function initMap() {
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+
+            var map = L.map('map').setView([-41.96, -71.53], 11);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© Trama'
+            }).addTo(map);
+
+            var tramaIcon = L.icon({
+                iconUrl: '/logo.png',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+
+            var markers = L.markerClusterGroup();
+
+            fetch('/data/podas_comarca.json')
+                .then(response => {
+                    if (!response.ok) throw new Error("No se pudo cargar el archivo JSON");
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.type === "FeatureCollection") {
+                        L.geoJSON(data, {
+                            pointToLayer: (f, latlng) => L.marker(latlng, { icon: tramaIcon }),
+                            onEachFeature: (f, layer) => layer.bindPopup("Intervención TRAMA")
+                        }).eachLayer(l => markers.addLayer(l));
+                    } else if (Array.isArray(data)) {
+                        data.forEach(p => {
+                            const lat = p.lat || p.latitude || p.y;
+                            const lng = p.lng || p.longitude || p.x;
+                            if (lat && lng) {
+                                markers.addLayer(L.marker([lat, lng], { icon: tramaIcon }).bindPopup("Intervención TRAMA"));
+                            }
+                        });
+                    }
+
+                    map.addLayer(markers);
+                    
+                    setTimeout(() => {
+                        map.invalidateSize();
+                        if (markers.getBounds().isValid()) {
+                            map.fitBounds(markers.getBounds(), { padding: [40, 40] });
+                        }
+                    }, 200);
+                })
+                .catch(err => {
+                    console.error("Error en mapa:", err);
+                    map.setView([-41.96, -71.53], 12);
+                });
+        }
+
+        // Ejecutar cuando el DOM esté listo
+        window.addEventListener('DOMContentLoaded', initMap);
+    </script>
 </body>
 </html>
