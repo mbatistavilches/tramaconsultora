@@ -167,65 +167,73 @@ const accentGreen = "#acc670";
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
 
- <script is:inline>
-    function initMap() {
-        const mapContainer = document.getElementById('map');
-        if (!mapContainer || typeof L === 'undefined') return;
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
 
-        // 1. Inicializar mapa
-        var map = L.map('map', {
-            scrollWheelZoom: false // Evita que el scroll de la web se trabe en el mapa
-        }).setView([-41.96, -71.53], 12);
-
-        // 2. Capa base con filtro orgánico Trama
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© Trama'
-        }).addTo(map);
-
-        const tramaIcon = L.divIcon({
-            className: "trama-marker",
-            iconAnchor: [5, 5],
-            html: `<span style="background-color: #acc670; width: 12px; height: 12px; display: block; border-radius: 50%; border: 2px solid #48542B; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></span>`
-        });
-
-        var markers = L.markerClusterGroup({
-            showCoverageOnHover: false,
-            maxClusterRadius: 40
-        });
-
-        // 3. Función procesadora
-        const addFeatures = (data) => {
-            if (data && data.features) {
-                data.features.forEach(f => {
-                    const c = f.geometry.coordinates;
-                    if (c && c.length >= 2) {
-                        const m = L.marker([c[1], c[0]], { icon: tramaIcon });
-                        m.bindPopup("<b>Intervención TRAMA</b><br>Manejo de Frutales");
-                        markers.addLayer(m);
-                    }
-                });
-                map.addLayer(markers);
-                map.invalidateSize();
-                if (markers.getBounds().isValid()) {
-                    map.fitBounds(markers.getBounds(), { padding: [30, 30] });
-                }
+    <script is:inline>
+        function ejecutarMapa() {
+            // Verificamos que ambas librerías existan en memoria
+            if (typeof L === 'undefined' || typeof L.markerClusterGroup !== 'function') {
+                console.log("Reintentando carga de librerías...");
+                setTimeout(ejecutarMapa, 300);
+                return;
             }
-        };
 
-        // 4. Intentar cargar archivo, si falla o tarda, el mapa se refresca
-        fetch('/data/podas_comarca.json')
-            .then(res => res.json())
-            .then(data => addFeatures(data))
-            .catch(e => console.error("Error cargando JSON, revisá la ruta en public/data/"));
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
 
-        // Forzar actualización de tamaño al final del ciclo de carga
-        setTimeout(() => { map.invalidateSize(); }, 1000);
-    }
+            // Inicialización
+            const map = L.map('map', { scrollWheelZoom: false }).setView([-41.96, -71.53], 12);
 
-    // Disparador de seguridad
-    window.addEventListener('load', () => {
-        setTimeout(initMap, 500);
-    });
-</script>
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© Trama'
+            }).addTo(map);
+
+            const tramaIcon = L.divIcon({
+                className: "trama-marker",
+                iconAnchor: [5, 5],
+                html: `<span style="background-color: #acc670; width: 12px; height: 12px; display: block; border-radius: 50%; border: 2px solid #48542B; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></span>`
+            });
+
+            const markers = L.markerClusterGroup({
+                showCoverageOnHover: false,
+                maxClusterRadius: 50
+            });
+
+            // Carga de datos con ruta absoluta para evitar errores de sub-páginas
+            fetch('https://tramaconsultora.com.ar/data/podas_comarca.json')
+                .then(res => {
+                    if(!res.ok) throw new Error("No se pudo obtener el JSON");
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.features) {
+                        data.features.forEach(f => {
+                            const c = f.geometry.coordinates;
+                            if (c && c.length >= 2) {
+                                // Google ordena [Long, Lat], Leaflet usa [Lat, Long]
+                                const m = L.marker([c[1], c[0]], { icon: tramaIcon });
+                                m.bindPopup("<b>Intervención TRAMA</b><br>Manejo de Frutales");
+                                markers.addLayer(m);
+                            }
+                        });
+                        map.addLayer(markers);
+                        
+                        // Ajuste de vista
+                        setTimeout(() => {
+                            map.invalidateSize();
+                            if (markers.getBounds().isValid()) {
+                                map.fitBounds(markers.getBounds(), { padding: [30, 30] });
+                            }
+                        }, 500);
+                    }
+                })
+                .catch(err => console.error("Error cargando puntos GPS:", err));
+        }
+
+        // Disparador de seguridad: espera a que todo el sitio cargue
+        window.onload = ejecutarMapa;
+    </script>
 </body>
 </html>
