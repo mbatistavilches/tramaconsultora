@@ -2,6 +2,13 @@
 // TRAMA - Sub-web Manejo de Frutales
 const bgColor = "#48542B"; 
 const accentGreen = "#acc670";
+import podasData from '../public/data/podas_comarca.json';
+
+const puntosLimpios = podasData.features.map(f => ({
+    lat: f.geometry.coordinates[1],
+    lng: f.geometry.coordinates[0]
+})).filter(p => p.lat && p.lng);
+
 ---
 
 <html lang="es">
@@ -164,7 +171,9 @@ const accentGreen = "#acc670";
         <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 20px; font-weight: 800; letter-spacing: 2px;">TRAMA · REGENERACIÓN</p>
     </footer>
 
-
+<script define:vars={{ puntosLimpios }}>
+    window.PUNTOS_TRAMA = puntosLimpios;
+</script>
   <script is:inline>
   // 1. Cargamos las librerías de forma asíncrona pero secuencial
   function loadScript(src) {
@@ -209,7 +218,23 @@ const accentGreen = "#acc670";
         iconAnchor: [6, 6],
         html: `<div style="background:#acc670;width:12px;height:12px;border-radius:50%;border:2px solid #48542B;"></div>`
       });
-
+// Borrá el fetch() y poné esto:
+if (window.PUNTOS_TRAMA) {
+    window.PUNTOS_TRAMA.forEach(p => {
+        const m = L.marker([p.lat, p.lng], { icon: tramaIcon });
+        m.bindPopup("<b>Intervención TRAMA</b>");
+        markers.addLayer(m);
+    });
+    
+    map.addLayer(markers);
+    
+    setTimeout(() => {
+        map.invalidateSize();
+        if (markers.getBounds().isValid()) {
+            map.fitBounds(markers.getBounds(), { padding: [30, 30] });
+        }
+    }, 500);
+}
       // Intentar cargar datos localmente primero para velocidad
       const response = await fetch('/data/podas_comarca.json');
       const data = await response.json();
