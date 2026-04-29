@@ -120,7 +120,7 @@ const accentGreen = "#acc670";
             <h3>Pack Inicial</h3>
             <ul>
                 <li>Poda técnica estacional</li>
-                <li>Diagnóstico de vigor y productividad</li>
+                <li>Diagnóstico de plantación</li>
                 <li><strong>Entregable:</strong> Informe de estado + recomendaciones</li>
             </ul>
         </div>
@@ -167,63 +167,80 @@ const accentGreen = "#acc670";
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
 
-    <script is:inline>
-        function initMap() {
-            const mapContainer = document.getElementById('map');
-            if (!mapContainer) return;
+   <script is:inline>
+    function initMap() {
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer) return;
 
-            var map = L.map('map').setView([-41.96, -71.53], 11);
+        // Inicializar mapa
+        var map = L.map('map').setView([-41.96, -71.53], 11);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© Trama'
-            }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© Trama'
+        }).addTo(map);
 
-            var tramaIcon = L.icon({
-                iconUrl: '/favicon.svg',
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            });
+        // Grupo de marcadores
+        var markers = L.markerClusterGroup();
 
-            var markers = L.markerClusterGroup();
+        // En lugar de una imagen que puede fallar, usamos un Marcador Circular con tus colores
+        const markerHtmlStyles = `
+            background-color: #acc670;
+            width: 12px;
+            height: 12px;
+            display: block;
+            border-radius: 50%;
+            border: 2px solid #48542B;
+        `;
 
-            fetch('/data/podas_comarca.json')
-                .then(response => {
-                    if (!response.ok) throw new Error("No se pudo cargar el archivo JSON");
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.type === "FeatureCollection") {
-                        L.geoJSON(data, {
-                            pointToLayer: (f, latlng) => L.marker(latlng, { icon: tramaIcon }),
-                            onEachFeature: (f, layer) => layer.bindPopup("Intervención TRAMA")
-                        }).eachLayer(l => markers.addLayer(l));
-                    } else if (Array.isArray(data)) {
-                        data.forEach(p => {
-                            const lat = p.lat || p.latitude || p.y;
-                            const lng = p.lng || p.longitude || p.x;
-                            if (lat && lng) {
-                                markers.addLayer(L.marker([lat, lng], { icon: tramaIcon }).bindPopup("Intervención TRAMA"));
-                            }
-                        });
+        const tramaIcon = L.divIcon({
+            className: "my-custom-pin",
+            iconAnchor: [6, 6],
+            labelAnchor: [0, 0],
+            popupAnchor: [0, -10],
+            html: `<span style="${markerHtmlStyles}" />`
+        });
+
+        fetch('/data/podas_comarca.json')
+            .then(response => response.json())
+            .then(data => {
+                // Función para procesar cada punto independientemente del formato
+                const processPoint = (lat, lng, name) => {
+                    if (lat && lng) {
+                        const m = L.marker([lat, lng], { icon: tramaIcon })
+                                   .bindPopup(`<b>${name || 'Intervención TRAMA'}</b>`);
+                        markers.addLayer(m);
                     }
+                };
 
-                    map.addLayer(markers);
-                    
-                    setTimeout(() => {
-                        map.invalidateSize();
-                        if (markers.getBounds().isValid()) {
-                            map.fitBounds(markers.getBounds(), { padding: [40, 40] });
-                        }
-                    }, 200);
-                })
-                .catch(err => {
-                    console.error("Error en mapa:", err);
-                    map.setView([-41.96, -71.53], 12);
-                });
-        }
+                // Detectar si es GeoJSON
+                if (data.features) {
+                    data.features.forEach(f => {
+                        const coords = f.geometry.coordinates;
+                        processPoint(coords[1], coords[0], f.properties.name || f.properties.Nombre);
+                    });
+                } 
+                // Detectar si es un Array simple
+                else if (Array.isArray(data)) {
+                    data.forEach(p => {
+                        const lat = p.lat || p.latitude || (p.geometry && p.geometry.y);
+                        const lng = p.lng || p.longitude || (p.geometry && p.geometry.x);
+                        processPoint(lat, lng, p.name);
+                    });
+                }
 
-        // Ejecutar cuando el DOM esté listo
-        window.addEventListener('DOMContentLoaded', initMap);
-    </script>
+                map.addLayer(markers);
+                
+                setTimeout(() => {
+                    map.invalidateSize();
+                    if (markers.getBounds().isValid()) {
+                        map.fitBounds(markers.getBounds(), { padding: [50, 50] });
+                    }
+                }, 300);
+            })
+            .catch(err => console.error("Error cargando puntos:", err));
+    }
+
+    window.addEventListener('DOMContentLoaded', initMap);
+</script>
 </body>
 </html>
