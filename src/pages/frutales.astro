@@ -9,6 +9,10 @@ const accentGreen = "#acc670";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manejo de Frutales - TRAMA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
     <style define:vars={{ bgColor, accentGreen }}>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
         
@@ -62,35 +66,48 @@ const accentGreen = "#acc670";
         .pack-card li { margin-bottom: 10px; display: flex; gap: 10px; font-size: 0.9rem; }
         .pack-card li::before { content: '✓'; color: var(--accentGreen); font-weight: 900; }
 
-        /* Botones de pie */
-        footer { 
-    width: 100%; 
-    max-width: 450px; 
-    padding: 20px; /* Asegura un margen de seguridad lateral */
-    text-align: center; 
-    z-index: 10; 
-    margin-bottom: 60px; 
-    box-sizing: border-box; /* CLAVE: Incluye el padding en el ancho total */
-}
+            /* Botones de pie */
+            footer { 
+        width: 100%; 
+        max-width: 450px; 
+        padding: 20px; /* Asegura un margen de seguridad lateral */
+        text-align: center; 
+        z-index: 10; 
+        margin-bottom: 60px; 
+        box-sizing: border-box; /* CLAVE: Incluye el padding en el ancho total */
+        }    
         .btn { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    width: 100%;           /* Ocupa el ancho del footer */
-    max-width: 100%;       /* Garantiza que no se pase */
-    padding: 18px; 
-    border-radius: 16px; 
-    margin-bottom: 15px; 
-    text-decoration: none; 
-    color: white; 
-    font-weight: 700; 
-    box-sizing: border-box; /* CLAVE: El padding no "suma" ancho extra */
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-        .whatsapp { background-color: #25D366; }
-        .instagram { background-color: #E4405F; }
-
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        width: 100%;           /* Ocupa el ancho del footer */
+        max-width: 100%;       /* Garantiza que no se pase */
+        padding: 18px; 
+        border-radius: 16px; 
+        margin-bottom: 15px; 
+        text-decoration: none; 
+        color: white; 
+        font-weight: 700; 
+        box-sizing: border-box; /* CLAVE: El padding no "suma" ancho extra */
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+            .whatsapp { background-color: #25D366; }
+            .instagram { background-color: #E4405F; }
+        #map { 
+        height: 400px; 
+        width: 100%; 
+        border-radius: 24px; 
+        margin: 20px 0; 
+        border: 2px solid rgba(255,255,255,0.1);
+        z-index: 5;
+        }
+        /* Personalización de los grupos de puntos (Clusters) con colores TRAMA */
+        .marker-cluster-small { background-color: rgba(172, 198, 112, 0.6); }
+        .marker-cluster-small div { background-color: rgba(172, 198, 112, 0.9); color: #48542B; font-weight: bold; }
+        
+        /* Inversión de colores para que el mapa OSM se vea más "nuestro" */
+        .leaflet-tile-pane { filter: sepia(0.5) hue-rotate(40deg) saturate(0.8) brightness(0.9); }
     </style>
 </head>
 <body>
@@ -144,7 +161,56 @@ const accentGreen = "#acc670";
     <div class="diff-box" style="border-left-color: #ff9f43; font-style: italic;">
         “¿Qué pasa si no podás correctamente 3 años seguidos? El costo de recuperar un frutal abandonado es 5 veces mayor al de un seguimiento planificado.”
     </div>
+<section class="services-section">
+    <p class="section-title">Nuestra Huella en la Comarca</p>
+    <div id="map"></div>
+</section>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+<script is:inline>
+    // 1. Inicializar el mapa centrado en el Paralelo 42
+    var map = L.map('map').setView([-41.96, -71.53], 11);
+
+    // 2. Capa base de OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; Trama Consultora'
+    }).addTo(map);
+
+    // 3. Icono personalizado (Isotipo de Trama)
+    var tramaIcon = L.icon({
+        iconUrl: '/logo.png', // Usa tu logo.png cargado en /public
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+    });
+
+    // 4. Grupo de marcadores (Clustering)
+    var markers = L.markerClusterGroup();
+
+    // 5. Cargar los datos desde tu archivo JSON en GitHub
+    fetch('/data/PODAS comarca.json')
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, { icon: tramaIcon });
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup("Intervención TRAMA");
+                }
+            }).eachLayer(function(layer) {
+                markers.addLayer(layer);
+            });
+            map.addLayer(markers);
+            
+            // Ajustar vista a los puntos cargados
+            if (markers.getBounds().isValid()) {
+                map.fitBounds(markers.getBounds(), { padding: [20, 20] });
+            }
+        })
+        .catch(err => console.error("Error cargando puntos GPS:", err));
+</script>
     <footer>
         <a href="https://wa.me/5491155119496?text=Hola!%20Me%20interesa%20el%20servicio%20de%20Manejo%20de%20Frutales" target="_blank" class="btn whatsapp">
             Consultar Presupuesto
