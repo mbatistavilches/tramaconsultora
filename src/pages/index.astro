@@ -156,6 +156,20 @@ summary {
     transition: background 0.3s; 
 }
 summary::-webkit-details-marker { display: none; } /* Oculta la flecha por defecto en Safari */
+    #map { 
+        height: 400px; 
+        width: 100%; 
+        border-radius: 24px; 
+        margin: 20px 0; 
+        border: 2px solid rgba(255,255,255,0.1);
+        z-index: 5;
+    }
+    /* Personalización de los grupos de puntos (Clusters) con colores TRAMA */
+    .marker-cluster-small { background-color: rgba(172, 198, 112, 0.6); }
+    .marker-cluster-small div { background-color: rgba(172, 198, 112, 0.9); color: #48542B; font-weight: bold; }
+    
+    /* Inversión de colores para que el mapa OSM se vea más "nuestro" */
+    .leaflet-tile-pane { filter: sepia(0.5) hue-rotate(40deg) saturate(0.8) brightness(0.9); }
     </style>
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://tramaconsultora.com.ar/" />
