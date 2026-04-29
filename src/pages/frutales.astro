@@ -170,48 +170,64 @@ const accentGreen = "#acc670";
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 <script is:inline>
-    // 1. Inicializar el mapa centrado en el Paralelo 42
+    // 1. Inicializar el mapa
     var map = L.map('map').setView([-41.96, -71.53], 11);
 
-    // 2. Capa base de OpenStreetMap
+    // 2. Capa base con filtro orgánico
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; Trama Consultora'
+        attribution: '© Trama'
     }).addTo(map);
 
-    // 3. Icono personalizado (Isotipo de Trama)
     var tramaIcon = L.icon({
-        iconUrl: '/logo.png', // Usa tu logo.png cargado en /public
+        iconUrl: '/logo.png',
         iconSize: [30, 30],
         iconAnchor: [15, 15]
     });
 
-    // 4. Grupo de marcadores (Clustering)
     var markers = L.markerClusterGroup();
 
-    // 5. Cargar los datos desde tu archivo JSON en GitHub
+    // 3. Fetch con manejo de errores robusto
     fetch('/data/podas_comarca.json')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error("Archivo no encontrado");
+            return response.json();
+        })
         .then(data => {
-            L.geoJSON(data, {
-                pointToLayer: function (feature, latlng) {
-                    return L.marker(latlng, { icon: tramaIcon });
-                },
-                onEachFeature: function (feature, layer) {
-                    layer.bindPopup("Intervención TRAMA");
-                }
-            }).eachLayer(function(layer) {
-                markers.addLayer(layer);
-            });
+            // Verificamos si es GeoJSON estándar
+            if (data.type === "FeatureCollection") {
+                L.geoJSON(data, {
+                    pointToLayer: (f, latlng) => L.marker(latlng, { icon: tramaIcon }),
+                    onEachFeature: (f, layer) => layer.bindPopup("Intervención TRAMA")
+                }).eachLayer(l => markers.addLayer(l));
+            } 
+            // Si es un array simple de objetos [{lat:..., lng:...}]
+            else if (Array.isArray(data)) {
+                data.forEach(p => {
+                    const lat = p.lat || p.latitude || p.y;
+                    const lng = p.lng || p.longitude || p.x;
+                    if (lat && lng) {
+                        markers.addLayer(L.marker([lat, lng], { icon: tramaIcon }).bindPopup("Intervención TRAMA"));
+                    }
+                });
+            }
+
             map.addLayer(markers);
             
-            // Ajustar vista a los puntos cargados
-            if (markers.getBounds().isValid()) {
-                map.fitBounds(markers.getBounds(), { padding: [20, 20] });
-            }
+            // Forzar re-render del mapa (Vital en Astro/SPA)
+            setTimeout(() => {
+                map.invalidateSize();
+                if (markers.getBounds().isValid()) {
+                    map.fitBounds(markers.getBounds(), { padding: [40, 40] });
+                }
+            }, 500);
         })
-        .catch(err => console.error("Error cargando puntos GPS:", err));
+        .catch(err => {
+            console.error("Error técnico:", err);
+            // Fallback: centrar en El Bolsón si falla la carga
+            map.setView([-41.96, -71.53], 12);
+        });
 </script>
-    <footer>
+<footer>
         <a href="https://wa.me/5491155119496?text=Hola!%20Me%20interesa%20el%20servicio%20de%20Manejo%20de%20Frutales" target="_blank" class="btn whatsapp">
             Consultar Presupuesto
         </a>
