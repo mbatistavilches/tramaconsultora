@@ -1,0 +1,21 @@
+{
+  "name": "Trama Consultora",
+  "short_name": "Trama",
+  "description": "Planificación y diseño de paisajes productivos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#48542B",
+  "theme_color": "#48542B",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
